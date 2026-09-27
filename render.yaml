@@ -1,0 +1,51 @@
+services:
+  - type: web
+    name: aegis-api
+    env: python
+    buildCommand: pip install -e .
+    startCommand: uvicorn apps.api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: aegis-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: aegis-redis
+          property: connectionString
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+
+  - type: worker
+    name: aegis-worker
+    env: python
+    buildCommand: pip install -e .
+    startCommand: python -m apps.worker.main
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: aegis-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: aegis-redis
+          property: connectionString
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+      - key: WORKER_ID
+        value: worker-render-1
+
+databases:
+  - name: aegis-db
+    databaseName: aegis_db
+    user: aegis_user
+
+redis:
+  - name: aegis-redis
+    ipAllowList: []
