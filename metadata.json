@@ -1,0 +1,5 @@
+{
+  "name": "Aegis - Production-Grade Durable AI Agent Runtime",
+  "description": "Production-oriented durable AI agent runtime with state machines, checkpoints, idempotency, human approval gates, and live execution tracing.",
+  "version": "1.0.0"
+}
